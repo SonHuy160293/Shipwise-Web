@@ -1,0 +1,7 @@
+# Remaining integration and tooling limits
+
+No backend contract, identity provider, production hosting target or telemetry destination has been supplied. Generation fails clearly without OPENAPI_SPEC. Production hosts must configure SPA fallback and API routing. Complete auth/CORS/CSRF/cookie decisions before connecting real data.
+
+npm audit --omit=dev reports zero production vulnerabilities. The full audit reports 9 development-tool advisories (7 moderate, 2 high): minimatch through typescript-eslint and Zod 3 through @google/design.md. The design CLI requires Zod 3; forcing Zod 4 or a different major minimatch version is not a verified safe fix. Do not blindly use npm audit fix --force. Use these tools only on trusted local source/specification input, track upstream compatible fixes and reassess before deployment pipelines accept untrusted design content. No runtime vulnerability is reported by the production audit.
+
+Impeccable's hook runs in Claude Code (shared .claude/settings.json) and Codex (.codex/hooks.json, approved by the user in Codex /hooks on this machine; each new machine needs its own approval). Gemini has no per-edit detector hook, so run impeccable detect manually there. Project skills are local guidance and not runtime dependencies. Figma is optional and was not used. CI is configured but has not run on GitHub from this environment. Browser testing covers Chromium only; cross-browser and manual screen-reader checks remain release work. Screenshot artifacts are inspected, not committed pixel baselines.

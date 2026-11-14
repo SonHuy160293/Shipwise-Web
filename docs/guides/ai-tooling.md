@@ -1,0 +1,13 @@
+# Project-local AI tooling
+
+UI/UX Pro Max installed using npx ui-ux-pro-max-cli init --ai codex into .agents/skills/ui-ux-pro-max. Official source: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill. Shipwise runs a trimmed edition: SKILL.md is rewritten as a rule lookup (web UX/accessibility, charts, React, shadcn, Tailwind 4) and scripts/search.mjs replaces the Python search, so only Node is needed. Style, palette and font data are out of scope because DESIGN.md owns them. Claude Code reaches it through the pointer at .claude/skills/ui-ux-pro-max/SKILL.md. Reinstalling the upstream skill overwrites the Shipwise edition. Restart the agent to discover the skill.
+
+Impeccable installed using npx impeccable install --providers=codex --scope=project into .agents/skills/impeccable with a local Windows engine. Official source: https://github.com/pbakaus/impeccable. The installer created .codex/hooks.json. A user must review and approve the project hook in Codex /hooks (and after hook changes); this implementation does not approve it. Reload the agent. Claude Code was wired with .agents/skills/impeccable/scripts/impeccable install --providers=claude --scope=project, which added .claude/skills/impeccable (engine binary gitignored), four impeccable subagents in .claude/agents and hook entries, which were moved into the shared, committed .claude/settings.json so every Claude Code session in this repository runs the detector. On a fresh clone the committed launcher fetches and checksum-verifies the pinned engine on first use; confirm with impeccable hooks status. Without a hook, run impeccable detect on changed UI files before handing off. Its context command has been executed. The one-shot brief supplies the product/design decisions, so no design interview is required for this task.
+
+Google @google/design.md is a pinned-lockfile development dependency. npm run design:lint uses the Windows-safe designmd alias. Official source: https://github.com/google-labs-code/design.md. Its tokens/spec are not a runtime dependency. Playwright is installed as a dev dependency; install browser binaries per the testing guide. Figma is optional, unused and unnecessary for any quality gate.
+
+These tools are agent guidance/build tooling, not application runtime features. Do not modify global agent configuration. Review updates before installing new versions or trusting hooks.
+
+[Completed shell critique](../design/shell-critique.md) records the independent review and resolved findings.
+
+Downloaded Impeccable platform binaries are ignored by Git; the committed launcher verifies and fetches the pinned engine on another machine. No global configuration was changed.

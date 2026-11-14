@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.env*
+!.env.example
+coverage/
+playwright-report/
+test-results/
+*.log
+*.tsbuildinfo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Downloaded agent engines (launchers fetch verified platform binaries)
+.agents/skills/impeccable/scripts/bin/
+.claude/skills/impeccable/scripts/bin/
+.impeccable/critique/
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+
+# Per-developer agent settings
+.claude/settings.local.json
