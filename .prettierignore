@@ -6,5 +6,6 @@ test-results
 .agents
 .claude
 .codex
+.gemini
 package-lock.json
 src/lib/api/generated

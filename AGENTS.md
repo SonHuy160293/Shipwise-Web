@@ -4,6 +4,15 @@
 
 Read this file, DESIGN.md for UI tasks, relevant docs/architecture pages, the feature requirements and available API contracts. No backend contract is supplied yet. User instructions and approved Shipwise design take precedence over installed skill defaults.
 
+## Roles and ownership
+
+Specs live in the backend repository at ../Shipwise/docs/specs and decisions at ../Shipwise/docs/adr; the API contract will be ../Shipwise/contracts/openapi/shipwise.v1.json. Every task comes from a spec's task table, which names its owner, repository, paths and verification commands; work only on paths your task owns.
+
+- Claude Code (planner, BA, solution architect, tech lead): writes specs, ADRs and task tables, and reviews every pull request. Does not write product code.
+- Codex (fullstack developer): the whole backend, plus this repository's data layer: src/lib/api/\*\*, src/features/\*/api, feature schemas and query/mutation hooks, and route registration in src/app/router.
+- Gemini (frontend developer and designer): presentation: src/features/\*/components and pages, src/components/\*\*, layouts. Proposes DESIGN.md and src/styles/globals.css token changes; a human approves them before they merge.
+- Order within a feature: spec, then Codex's backend + contract + data-layer pull request, then Gemini's UI pull request built on the merged hooks, each reviewed by Claude. Never edit another role's paths in the same pull request; ask the planner to reassign instead.
+
 ## Boundaries
 
 app composes router/providers/layouts, never business logic. Features own business capabilities; shared components/lib/config must not import features. Use feature public index exports across features. Reuse shared components. No circular dependencies, unrelated refactoring, generic repositories, DI containers or speculative abstractions. Use @/ imports for internal code (colocated tests may use relative imports). Keep changes small and explicit.
@@ -26,7 +35,7 @@ Run npm run check (typecheck, ESLint, formatting, unit tests, design lint, build
 
 ## Skills
 
-Project skills are agent guidance, never runtime dependencies: impeccable (design critique and detector) and ui-ux-pro-max (UX, React, shadcn and Tailwind rule lookup). They live under .agents/skills, with Claude Code entry points under .claude/skills. Shipwise DESIGN.md overrides their aesthetic suggestions. Hooks are approved by a human in each agent's own hook settings; never approve, add or change hooks yourself, and never overwrite global agent config. See docs/guides/ai-tooling.md.
+Project skills are agent guidance, never runtime dependencies: impeccable (design critique and detector) and ui-ux-pro-max (UX, React, shadcn and Tailwind rule lookup). They live under .agents/skills, which Codex and Gemini load directly; Claude Code uses the entry points under .claude/skills. Shipwise DESIGN.md overrides their aesthetic suggestions. Hooks are approved by a human in each agent's own hook settings; never approve, add or change hooks yourself, and never overwrite global agent config. See docs/guides/ai-tooling.md.
 
 ## Definition of done
 

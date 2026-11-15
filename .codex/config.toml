@@ -1,0 +1,3 @@
+# Project-scoped Codex settings (loaded only while this repository is trusted).
+# Codex is the fullstack developer here; the user-level default is "low".
+model_reasoning_effort = "high"

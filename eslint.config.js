@@ -13,6 +13,7 @@ export default tseslint.config(
       '.agents/**',
       '.claude/**',
       '.codex/**',
+      '.gemini/**',
     ],
   },
   {

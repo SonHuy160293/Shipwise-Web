@@ -6,6 +6,8 @@ Impeccable installed using npx impeccable install --providers=codex --scope=proj
 
 Google @google/design.md is a pinned-lockfile development dependency. npm run design:lint uses the Windows-safe designmd alias. Official source: https://github.com/google-labs-code/design.md. Its tokens/spec are not a runtime dependency. Playwright is installed as a dev dependency; install browser binaries per the testing guide. Figma is optional, unused and unnecessary for any quality gate.
 
+Per-agent project config: Claude Code reads CLAUDE.md (which imports AGENTS.md) and .claude/settings.json (impeccable hooks, read access to ../Shipwise). Codex reads AGENTS.md, .codex/hooks.json and .codex/config.toml (high reasoning effort) while the folder is trusted. Gemini reads .gemini/settings.json (AGENTS.md as context, read access to the backend's docs and contracts) and the skills in .agents/skills, but only after the folder is trusted in Gemini; in an untrusted folder it ignores project settings and skills. Gemini has no per-edit impeccable hook, so run impeccable detect before handing off.
+
 These tools are agent guidance/build tooling, not application runtime features. Do not modify global agent configuration. Review updates before installing new versions or trusting hooks.
 
 [Completed shell critique](../design/shell-critique.md) records the independent review and resolved findings.
