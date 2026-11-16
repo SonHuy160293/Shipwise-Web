@@ -6,12 +6,17 @@ Read this file, DESIGN.md for UI tasks, relevant docs/architecture pages, the fe
 
 ## Roles and ownership
 
-Specs live in the backend repository at ../Shipwise/docs/specs and decisions at ../Shipwise/docs/adr; the API contract will be ../Shipwise/contracts/openapi/shipwise.v1.json. Every task comes from a spec's task table, which names its owner, repository, paths and verification commands; work only on paths your task owns.
+Specs live in the backend repository at ../Shipwise/docs/specs and decisions at ../Shipwise/docs/adr; the API contract will be ../Shipwise/contracts/openapi/shipwise.v1.json. The process (lanes, gates, who decides, changing a spec) is in ../Shipwise/docs/workflow.md. Every task comes from a spec's task table, which names its owner, repository, paths and verification commands; work only on paths your task owns. The one exception is the small change lane: a change that touches no API contract, permission rule or approved screen behavior, and stays inside one role's paths, needs no spec, only a focused test, the pull request template and a review.
 
 - Claude Code (planner, BA, solution architect, tech lead): writes specs, ADRs and task tables, and reviews every pull request. Does not write product code.
 - Codex (fullstack developer): the whole backend, plus this repository's data layer: src/lib/api/\*\*, src/features/\*/api, feature schemas and query/mutation hooks, and route registration in src/app/router.
 - Gemini (frontend developer and designer): presentation: src/features/\*/components and pages, src/components/\*\*, layouts. Proposes DESIGN.md and src/styles/globals.css token changes; a human approves them before they merge.
-- Order within a feature: spec, then Codex's backend + contract + data-layer pull request, then Gemini's UI pull request built on the merged hooks, each reviewed by Claude. Never edit another role's paths in the same pull request; ask the planner to reassign instead.
+- Order within a feature: challenge brief and draft spec, then Gemini's design proposal for new pages and complex flows (docs/design/proposals, see its README), then the approved spec, then Codex's backend + contract + data-layer pull request, then Gemini's UI pull request built on the merged hooks, each reviewed by Claude with the review-pr skill. Never edit another role's paths in the same pull request; ask the planner to reassign instead.
+- Work on feat/NNNN-slug (or fix/slug), never on main. Check the branch and working tree before editing; never discard work you did not make, never force-push, and never merge or deploy: a human does.
+
+## Stop and ask
+
+Stop the affected task and write a decision request (context, options, recommendation, impact, safe default) instead of guessing when: a requirement is missing or contradicts another; the spec, the API contract and the design proposal disagree; a screen needs a field or endpoint the contract lacks; you find a cross-organization access or data-loss risk; the task needs paths it does not own; or the scope or dependencies grow beyond the spec. The safe default is not to implement the contested behavior. Never change approved screen behavior or work around a contract gap silently.
 
 ## Boundaries
 
@@ -39,4 +44,4 @@ Project skills are agent guidance, never runtime dependencies: impeccable (desig
 
 ## Definition of done
 
-A change is done only when: npm run check passes (and npm run test:e2e for UI changes); behavior changes have tests; generated contracts are regenerated from the backend spec when it changed, never hand-edited; impeccable detect is clean or each finding is triaged for UI changes; a different agent than the author has reviewed the diff; and the handoff reports the actual commands run and their results, including anything skipped.
+A change is done only when: npm run check passes (and npm run test:e2e for UI changes); behavior changes have tests; generated contracts are regenerated from the backend spec when it changed, never hand-edited; impeccable detect is clean or each finding is triaged for UI changes; a different agent than the author has reviewed the diff; and the pull request template is filled in with the acceptance criteria covered, screenshots for UI changes, and the actual commands run and their results (PASSED, FAILED or NOT_RUN), including anything skipped.
