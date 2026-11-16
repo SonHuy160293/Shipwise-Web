@@ -6,13 +6,22 @@ Read this file, DESIGN.md for UI tasks, relevant docs/architecture pages, the fe
 
 ## Roles and ownership
 
-Specs live in the backend repository at ../Shipwise/docs/specs and decisions at ../Shipwise/docs/adr; the API contract will be ../Shipwise/contracts/openapi/shipwise.v1.json. The process (lanes, gates, who decides, changing a spec) is in ../Shipwise/docs/workflow.md. Every task comes from a spec's task table, which names its owner, repository, paths and verification commands; work only on paths your task owns. The one exception is the small change lane: a change that touches no API contract, permission rule or approved screen behavior, and stays inside one role's paths, needs no spec, only a focused test, the pull request template and a review.
+Specs live in the backend repository at ../Shipwise/docs/specs and decisions at ../Shipwise/docs/adr; the API contract will be ../Shipwise/contracts/openapi/shipwise.v1.json. The process (lanes, gates, who decides, changing a spec) is in ../Shipwise/docs/workflow.md. Every task comes from a spec's task table, which names its owner, repository, paths and verification commands; work only on paths your task owns. The one exception is the small change lane: a change that touches no API contract, permission rule or approved screen behavior, and stays inside one role's paths, needs no spec, only a focused test, a commit under the commit rule and a review.
 
-- Claude Code (planner, BA, solution architect, tech lead): writes specs, ADRs and task tables, and reviews every pull request. Does not write product code.
+- Claude Code (planner, BA, solution architect, tech lead): writes specs, ADRs and task tables, and reviews every change before it is pushed. Does not write product code.
 - Codex (fullstack developer): the whole backend, plus this repository's data layer: src/lib/api/\*\*, src/features/\*/api, feature schemas and query/mutation hooks, and route registration in src/app/router.
-- Gemini (frontend developer and designer): presentation: src/features/\*/components and pages, src/components/\*\*, layouts. Proposes DESIGN.md and src/styles/globals.css token changes; a human approves them before they merge.
-- Order within a feature: challenge brief and draft spec, then Gemini's design proposal for new pages and complex flows (docs/design/proposals, see its README), then the approved spec, then Codex's backend + contract + data-layer pull request, then Gemini's UI pull request built on the merged hooks, each reviewed by Claude with the review-pr skill. Never edit another role's paths in the same pull request; ask the planner to reassign instead.
-- Work on feat/NNNN-slug (or fix/slug), never on main. Check the branch and working tree before editing; never discard work you did not make, never force-push, and never merge or deploy: a human does.
+- Gemini (frontend developer and designer): presentation: src/features/\*/components and pages, src/components/\*\*, layouts. Proposes DESIGN.md and src/styles/globals.css token changes; a human approves them before they are committed.
+- Order within a feature: challenge brief and draft spec, then Gemini's design proposal for new pages and complex flows (docs/design/proposals, see its README), then the approved spec, then Codex's backend + contract + data-layer task, then Gemini's UI task built on the pushed hooks, each reviewed by Claude with the review-change skill before it is pushed. Never edit another role's paths; ask the planner to reassign instead.
+
+## Commit rule
+
+No pull requests or feature branches in this phase: commit directly to main. The full rule is in ../Shipwise/docs/workflow.md.
+
+- Run git status before editing. If the working tree has changes you did not make, stop and ask; never discard, reset, stash or overwrite them.
+- Commit only when npm run check passes (and npm run test:e2e for UI changes); main is never left red. One logical change per commit; stage explicit paths, never git add -A.
+- Message: `<type>(<scope>): <summary>` in at most 72 characters (types: feat, fix, refactor, perf, test, docs, build, ci, chore), a body saying what and why, then the trailers `Spec: NNNN task N` (or `Spec: none (small change)`), `Covers: AC-n, ...` and `Verified: <command> PASSED|FAILED; ...`. Add `Not-run:` and `Deviations:` lines when they apply. Never write PASSED for a command you did not run.
+- Never amend, rebase or force-push pushed commits, and never use --no-verify; fix forward with a new commit.
+- Do not push. Report the commit hashes, the results and, for UI changes, where the screenshots are; the human pushes after the review has no open blocker.
 
 ## Stop and ask
 
@@ -44,4 +53,4 @@ Project skills are agent guidance, never runtime dependencies: impeccable (desig
 
 ## Definition of done
 
-A change is done only when: npm run check passes (and npm run test:e2e for UI changes); behavior changes have tests; generated contracts are regenerated from the backend spec when it changed, never hand-edited; impeccable detect is clean or each finding is triaged for UI changes; a different agent than the author has reviewed the diff; and the pull request template is filled in with the acceptance criteria covered, screenshots for UI changes, and the actual commands run and their results (PASSED, FAILED or NOT_RUN), including anything skipped.
+A change is done only when: npm run check passes (and npm run test:e2e for UI changes); behavior changes have tests; generated contracts are regenerated from the backend spec when it changed, never hand-edited; impeccable detect is clean or each finding is triaged for UI changes; a different agent than the author has reviewed the commits before they are pushed; and the commit messages follow the commit rule, with the acceptance criteria covered and the actual commands run and their results, and the handoff report lists anything skipped.
