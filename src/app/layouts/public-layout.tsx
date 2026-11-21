@@ -4,10 +4,10 @@ import { Link, Outlet } from 'react-router'
 // Task 3 owns the finished public shell; this stub establishes its landmarks.
 export function PublicLayout() {
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="min-h-dvh bg-background text-foreground">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-background focus:p-4"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:border focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium"
       >
         Skip to content
       </a>
